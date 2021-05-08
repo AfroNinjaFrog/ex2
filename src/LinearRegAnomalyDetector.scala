@@ -9,7 +9,6 @@ object LinearRegAnomalyDetector extends AnomalyDetector {
   override def learn(normal: TimeSeries): Map[String, String] = {
     val maxCovValues: Array[MaxCov] = findMaxCov(normal)
     pairs = maxCovValues.map(value => value.indexOfMaxCov)
-
     var pointsOfCovariancePairs: Vector[Vector[Point]] = Vector()
     pointsOfCovariancePairs = Vector.from(maxCovValues.zipWithIndex.map(covValue => (normal.getValues(normal.features(covValue._2)).get
       .zip(normal.getValues(normal.features(covValue._1.indexOfMaxCov)).get)
@@ -31,7 +30,7 @@ object LinearRegAnomalyDetector extends AnomalyDetector {
           }
         })
     })
-    anomalies
+    anomalies.distinct
   }
 
   def calcCovarianceMatrix(normal: TimeSeries): Array[Array[Double]] = {

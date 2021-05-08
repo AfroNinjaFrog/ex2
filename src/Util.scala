@@ -74,4 +74,16 @@ object Util {
   def findMaxDistance(line: Line, ps: Array[Point]): Double = {
     ps.map(p => line.dist(p)).max
   }
+  def filterPointerPairs(arr: Array[Int]): Array[Int] = {
+    var removeArr: Array[Boolean] = Array.fill(arr.length){true}
+    arr.zipWithIndex.foreach(value=> {
+      if(removeArr(value._2)) {
+        if ( arr(arr(value._2)) == value._2) {
+          removeArr(arr(value._2)) = false
+        }
+      }
+    })
+    val filteredArr =  arr.zipWithIndex.filter((value) => removeArr(value._2)).map(value=> value._1)
+    return filteredArr
+  }
 }
