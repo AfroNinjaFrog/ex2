@@ -36,7 +36,7 @@ object MainTrain {
       println("wrong anomaly detected (-10)")
 
   }
-/*
+
   // LinearRegAnomalyDetector test
   def testLRAD():Unit={
     val ts=new TimeSeries("train3.csv")
@@ -50,7 +50,7 @@ object MainTrain {
     if(!r1.contains(("A,B",5)) || !r1.contains(("C,D",13)))
       println("wrong anomalies reported (-10)")
   }
-
+/*
   // SumSqrAnomalyDetector test
   def testSSD():Unit={
     val ts=new TimeSeries("train3.csv")
@@ -88,7 +88,7 @@ object MainTrain {
     testTimeSeries()
 
     testZAD()
-    //testLRAD()
+    testLRAD()
     //testSSD()
     //testHAD()
 

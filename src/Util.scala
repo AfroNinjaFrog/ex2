@@ -1,7 +1,7 @@
 import scala.collection.mutable.ArrayBuffer
 
 object Util {
-  def Max[A](list: List[A], comporer: (A, A) => Int): A = {
+  def max[A](list: List[A], comporer: (A, A) => Int): A = {
     var maxVal: A = list.head
     for (listItem <- list) {
       if (comporer(listItem, maxVal) > 0) {
@@ -25,7 +25,7 @@ object Util {
       } else if (comparer(lastValue, listItem)) {
         lastValue = listItem
       } else {
-        false
+        return false
       }
     })
     true
@@ -39,16 +39,21 @@ object Util {
     arr.map(arrItem => occurences.getOrElse(String.valueOf(arrItem), 0.0).asInstanceOf[Int].toDouble / arr.length)
   }
 
-  def entropyCalc(arr: Array[Double]): Double = {
-    -probs(arr).map[Double](arrItem => arrItem * (Math.log(arrItem) / Math.log(2))).sum
+  def entropy(arr: Array[Double]): Double = {
+    -(getUniqueProbs(arr).map(arrItem => arrItem * (Math.log10(arrItem) / Math.log10(2))).sum)
   }
-
+  def getUniqueProbs(arr:Array[Double]): Array[Double] = {
+    probs(arr).zip(arr).zipWithIndex.filter(values=> values._2 == arr.indexOf(values._1._2)).map(values=> values._1._1)
+  }
+  def getUniqueProbsAndValues(arr:Array[Double]): Array[(Double, Double)] = {
+    probs(arr).zip(arr).zipWithIndex.filter(values=> values._2 == arr.indexOf(values._1._2)).map(values=> (values._1._1, values._1._2))
+  }
   def mu(arr: Array[Double]): Double = {
-    probs(arr).zip(arr).map(i => i._1 * i._2).sum
+    getUniqueProbsAndValues(arr).map(i => i._1 * i._2).sum
   }
 
   def variance(arr: Array[Double]): Double = {
-    probs(arr).zip(arr).map(i => i._1 * Math.pow(i._2 - mu(arr), 2)).sum
+    getUniqueProbsAndValues(arr).map(i => i._1 * Math.pow(i._2 - mu(arr), 2)).sum
   }
 
   def zscore(arr: Array[Double], x: Double): Double = {
@@ -60,33 +65,13 @@ object Util {
   def covariance(xs: Array[Double], ys: Array[Double]): Double = {
     mu(xs.zip(ys).map(i => i._1 * i._2)) - (mu(xs) * mu(ys))
   }
-
   def pearson(xs: Array[Double], ys: Array[Double]): Double = {
     (covariance(xs, ys)) / (Math.sqrt(variance(xs)) * Math.sqrt(variance(ys)))
   }
-
   def average(arr: Array[Double]): Double = {
-    arr.sum / arr.length
+    arr.sum/arr.length
   }
-
-  def getAFromPoints(points: Array[Point]): Double = {
-    val xs = new ArrayBuffer[Double]()
-    val ys = new ArrayBuffer[Double]()
-    points.foreach(point => {
-      xs += point.x
-      ys += point.y
-    })
-    Util.covariance(Array.from(xs), Array.from(ys)) / Util.variance(Array.from(xs))
-  }
-
-  def getBFromPointsAndA(points: Array[Point]): Double = {
-    val a = this.getAFromPoints(points)
-    val xs = new ArrayBuffer[Double]()
-    val ys = new ArrayBuffer[Double]()
-    points.foreach(point => {
-      xs += point.x
-      ys += point.y
-    })
-    Util.average(Array.from(ys)) - (a * Util.average(Array.from(xs)))
+  def findMaxDistance(line: Line, ps: Array[Point]): Double = {
+    ps.map(p => line.dist(p)).max
   }
 }
