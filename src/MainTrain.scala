@@ -50,7 +50,6 @@ object MainTrain {
     if(!r1.contains(("A,B",5)) || !r1.contains(("C,D",13)))
       println("wrong anomalies reported (-10)")
   }
-/*
   // SumSqrAnomalyDetector test
   def testSSD():Unit={
     val ts=new TimeSeries("train3.csv")
@@ -65,23 +64,24 @@ object MainTrain {
       println("wrong anomalies reported (-10)")
 
   }
-  // HybridAnomalyDetector test
-  def testHAD():Unit={
-    val ts=new TimeSeries("train4.csv")
-    val model=HybridAnomalyDetector.learn(ts)
-    val r0=HybridAnomalyDetector.detect(model,ts)
+  /*
+    // HybridAnomalyDetector test
+    def testHAD():Unit={
+      val ts=new TimeSeries("train4.csv")
+      val model=HybridAnomalyDetector.learn(ts)
+      val r0=HybridAnomalyDetector.detect(model,ts)
 
-    if(r0.length>0)
-      println("there should not be any anomalies detected here (-10)")
-    val r1=HybridAnomalyDetector.detect(model,new TimeSeries("test4.csv"))
+      if(r0.length>0)
+        println("there should not be any anomalies detected here (-10)")
+      val r1=HybridAnomalyDetector.detect(model,new TimeSeries("test4.csv"))
 
 
-    if(r1.length!=5)
-      println("wrong number of reported anomalies (-10)")
-    if(!r1.contains(("E",24)) || !r1.contains(("B",10)) || !r1.contains(("D",15)) || !r1.contains(("A,B",10)) || !r1.contains(("C,D",15)))
-      println("wrong anomalies reported (-10)")
-  }
-*/
+      if(r1.length!=5)
+        println("wrong number of reported anomalies (-10)")
+      if(!r1.contains(("E",24)) || !r1.contains(("B",10)) || !r1.contains(("D",15)) || !r1.contains(("A,B",10)) || !r1.contains(("C,D",15)))
+        println("wrong anomalies reported (-10)")
+    }
+  */
 
   def main(args: Array[String]): Unit = {
 
@@ -89,7 +89,7 @@ object MainTrain {
 
     testZAD()
     testLRAD()
-    //testSSD()
+    testSSD()
     //testHAD()
 
     println("done")
