@@ -64,7 +64,6 @@ object MainTrain {
       println("wrong anomalies reported (-10)")
 
   }
-  /*
     // HybridAnomalyDetector test
     def testHAD():Unit={
       val ts=new TimeSeries("train4.csv")
@@ -81,7 +80,6 @@ object MainTrain {
       if(!r1.contains(("E",24)) || !r1.contains(("B",10)) || !r1.contains(("D",15)) || !r1.contains(("A,B",10)) || !r1.contains(("C,D",15)))
         println("wrong anomalies reported (-10)")
     }
-  */
 
   def main(args: Array[String]): Unit = {
 
@@ -90,7 +88,7 @@ object MainTrain {
     testZAD()
     testLRAD()
     testSSD()
-    //testHAD()
+    testHAD()
 
     println("done")
   }

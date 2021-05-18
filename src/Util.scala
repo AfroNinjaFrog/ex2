@@ -145,3 +145,5 @@ object Util {
 }
 
 case class MaxCov(maxCov: Double, indexOfMaxCov: Int) {}
+abstract class BaseLearntPairData() {}
+
