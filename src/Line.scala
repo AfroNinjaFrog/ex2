@@ -1,14 +1,14 @@
-import scala.collection.mutable.ArrayBuffer
+
 
 class Line(points: Array[Point]) {
-  private val xs = new ArrayBuffer[Double]()
-  private val ys = new ArrayBuffer[Double]()
+  private var xs: Array[Double]  = Array[Double]()
+  private var ys: Array[Double] = Array[Double]()
   points.foreach(point => {
-    xs += point.x
-    ys += point.y
+    xs = xs :+ point.x
+    ys = ys :+ point.y
   })
-  val a: Double = Util.covariance(Array.from(xs), Array.from(ys)) / Util.variance(Array.from(xs))
-  val b: Double = Util.average(Array.from(ys)) - (a * Util.average(Array.from(xs)))
+  val a: Double = Util.covariance(xs, ys) / Util.variance(xs)
+  val b: Double = Util.average(ys) - (a * Util.average(xs))
 
   def f(x: Double): Double = {
     this.a * x + this.b

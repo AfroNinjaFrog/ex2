@@ -19,7 +19,7 @@ class TimeSeries(csvFileName: String) {
     }
   })
   source.close()
-  val features: Vector[String] = Vector.from(prepareForFeatures)
+  val features: Vector[String] = Util.arrayToVector(prepareForFeatures)
 
   // given name of a feature return in O(1) its value series
   def getValues(feature: String): Option[Vector[Double]] = {
@@ -36,7 +36,7 @@ class TimeSeries(csvFileName: String) {
     if(r.max >= this.getValues(feature).get.length || r.min < 0) {
       return None
     }
-    allCatch.opt(this.getValues(feature).get.zipWithIndex.filter(item=> item._2 <= r.max && item._2 >= r.min ).map[Double]((item => item._1)))
+    allCatch.opt(this.getValues(feature).get.zipWithIndex.filter(item=> item._2 <= r.max && item._2 >= r.min ).map((item => item._1)))
   }
 
 

@@ -1,4 +1,5 @@
 import scala.collection.mutable.ArrayBuffer
+import scala.reflect.ClassTag
 
 object Util {
   def max[A](list: List[A], comporer: (A, A) => Int): A = {
@@ -63,8 +64,8 @@ object Util {
     (x - mu(arr)) / Math.sqrt(variance(arr))
   }
 
-  def absZScore(vector: Vector[Double], x: Double): Double = {
-    Math.abs(zscore(Array.from(vector), x))
+  def absZScore(values: Array[Double], x: Double): Double = {
+    Math.abs(zscore(values, x))
   }
 
   def covariance(xs: Array[Double], ys: Array[Double]): Double = {
@@ -103,7 +104,7 @@ object Util {
     val featuresValues: Vector[Vector[Double]] = normal.features.map((feature) => normal.getValues(feature).get)
     featuresValues.zipWithIndex.foreach(featureValue => {
       for (otherFeaturesIndex <- featureValue._2 + 1 until featuresValues.length) {
-        matrixOfCovariance(featureValue._2)(otherFeaturesIndex) = Math.abs(Util.pearson(Array.from(normal.getValues(normal.features(featureValue._2)).get), Array.from(normal.getValues(normal.features(otherFeaturesIndex)).get)))
+        matrixOfCovariance(featureValue._2)(otherFeaturesIndex) = Math.abs(Util.pearson(vectorToArray(normal.getValues(normal.features(featureValue._2)).get), vectorToArray(normal.getValues(normal.features(otherFeaturesIndex)).get)))
       }
     })
     matrixOfCovariance
@@ -134,13 +135,21 @@ object Util {
   }
 
   def createPointsFromCovariance(maxCovValues: Array[MaxCov], ts: TimeSeries): Vector[Vector[Point]] = {
-    Vector.from(maxCovValues.zipWithIndex.map(covValue => (ts.getValues(ts.features(covValue._2)).get
+    Util.arrayToVector(maxCovValues.zipWithIndex.map(covValue => (ts.getValues(ts.features(covValue._2)).get
       .zip(ts.getValues(ts.features(covValue._1.indexOfMaxCov)).get)
       .map(twoFeatures => new Point(twoFeatures._1, twoFeatures._2)))))
   }
 
   def orderByLetterOrder(ts: TimeSeries, val1: Int, val2: Int): String = {
     (if (val1 > val2) (ts.features(val2) + "," + ts.features(val1)) else (ts.features(val1) + "," + ts.features(val2)))
+  }
+  def arrayToVector[A](arr: Array[A]): Vector[A] = {
+    Vector[A]() ++ arr
+  }
+  def vectorToArray[A:ClassTag](vec: Vector[A]): Array[A] = {
+    var arr: Array[A] = Array[A]()
+
+    arr ++ vec
   }
 }
 

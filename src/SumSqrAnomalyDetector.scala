@@ -14,7 +14,7 @@ object SumSqrAnomalyDetector extends AnomalyDetector {
   }
 
   def learnSumSquarePair(points: Vector[Point]): SumSquarePairData = {
-    SumSquarePairData(points.zipWithIndex.map(pointAndIndex => Util.sqrSum(Array.from(points), pointAndIndex._2)).max)
+    SumSquarePairData(points.zipWithIndex.map(pointAndIndex => Util.sqrSum(Util.vectorToArray(points), pointAndIndex._2)).max)
   }
 
   override def detect(model: Map[String, String], test: TimeSeries): Vector[(String, Int)] = {
@@ -22,7 +22,7 @@ object SumSqrAnomalyDetector extends AnomalyDetector {
     pairs.zipWithIndex.zip(learntData).foreach((pairAndData) => {
       var pairPoints: Vector[Point] = test.getValues(test.features(pairAndData._1._1)).get.zip(
         test.getValues(test.features(pairAndData._1._2)).get).map(xAndYValues => new Point(xAndYValues._2, xAndYValues._1))
-      anomalies = anomalies :++ detectSumSquarePair(pairAndData._2, Array.from(pairPoints)).map(index => (Util.orderByLetterOrder(test, pairAndData._1._1, pairAndData._1._2), index))
+      anomalies = anomalies ++ (detectSumSquarePair(pairAndData._2, Util.vectorToArray(pairPoints)).map(index => (Util.orderByLetterOrder(test, pairAndData._1._1, pairAndData._1._2), index)))
     })
     anomalies.distinct
   }

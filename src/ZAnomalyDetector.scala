@@ -11,19 +11,19 @@ object ZAnomalyDetector extends AnomalyDetector {
   }
 
   def learnZAnomalyPair(values: Vector[Double]): ZAnomalyPairData = {
-    ZAnomalyPairData(values.map(value => Util.absZScore(values, value)).max, values)
+    ZAnomalyPairData(values.map(value => Util.absZScore(Util.vectorToArray(values), value)).max, values)
   }
 
   override def detect(model: Map[String, String], test: TimeSeries): Vector[(String, Int)] = {
     var anomalies: Vector[(String, Int)] = Vector()
     test.features.foreach(feature =>
-      anomalies = anomalies :++ detecZAnomalyPair(ZAnomalyPairData(model(feature).toDouble, this.learntTimeSeries.getValues(feature).get), test.getValues(feature).get).map(anomalyIndex => (feature, anomalyIndex))
+      anomalies = anomalies ++ detecZAnomalyPair(ZAnomalyPairData(model(feature).toDouble, this.learntTimeSeries.getValues(feature).get), test.getValues(feature).get).map(anomalyIndex => (feature, anomalyIndex))
     )
     anomalies
   }
 
   def detecZAnomalyPair(zAnomalyPairData: ZAnomalyPairData, detectValues: Vector[Double]): Array[Int] = {
-    Array.from(detectValues.zipWithIndex.filter(value => Util.absZScore(zAnomalyPairData.values, value._1) > zAnomalyPairData.maxZScore).map(valueAndIndex => valueAndIndex._2))
+    Util.vectorToArray(detectValues.zipWithIndex.filter(value => Util.absZScore(Util.vectorToArray(zAnomalyPairData.values), value._1) > zAnomalyPairData.maxZScore).map(valueAndIndex => valueAndIndex._2))
   }
 }
 

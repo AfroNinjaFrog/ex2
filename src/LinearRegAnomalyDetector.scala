@@ -15,8 +15,8 @@ object LinearRegAnomalyDetector extends AnomalyDetector {
   }
 
   def learnLinearRegPair(points: Vector[Point]): LinearRegPairData = {
-    var line: Line = new Line(Array.from(points))
-    new LinearRegPairData(line, Util.findMaxDistance(line, Array.from(points)))
+    var line: Line = new Line(Util.vectorToArray(points))
+    new LinearRegPairData(line, Util.findMaxDistance(line, Util.vectorToArray(points)))
   }
 
   override def detect(model: Map[String, String], test: TimeSeries): Vector[(String, Int)] = {
@@ -24,7 +24,7 @@ object LinearRegAnomalyDetector extends AnomalyDetector {
     pairs.zipWithIndex.zip(learntData).foreach((pairAndData) => {
       val points: Vector[Point] = test.getValues(test.features(pairAndData._1._1)).get.zip(
         test.getValues(test.features(pairAndData._1._2)).get).map(xAndYValues => new Point(xAndYValues._2, xAndYValues._1))
-      anomalies = anomalies :++ detectLinearRegPair(pairAndData._2, Array.from(points)).map(index => (Util.orderByLetterOrder(test, pairAndData._1._1, pairAndData._1._2), index))
+      anomalies = anomalies ++ (detectLinearRegPair(pairAndData._2, Util.vectorToArray(points)).map(index => (Util.orderByLetterOrder(test, pairAndData._1._1, pairAndData._1._2), index)))
     })
     anomalies.distinct
   }
